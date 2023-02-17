@@ -19,7 +19,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (user, { rejectWithValue }) => {
     try {
-      const token = await axios.post(`${url}/register`, {
+      const token = await axios.post(`${url}/api/register`, {
         name: user.name,
         email: user.email,
         password: user.password,
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (user, { rejectWithValue }) => {
     try {
-      const token = await axios.post(`${url}/login`, {
+      const token = await axios.post(`${url}/api/login`, {
         email: user.email,
         password: user.password,
       });
@@ -58,26 +58,26 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loadUser(state, action){
-      const token = state.token
-      
-      if(token){
-        const user = jwtDecode(token)
+    loadUser(state, action) {
+      const token = state.token;
 
-        return{
+      if (token) {
+        const user = jwtDecode(token);
+
+        return {
           ...state,
           token,
           name: user.name,
           email: user.email,
           _id: user._id,
           userLoaded: true,
-        }
+        };
       }
     },
-    logoutUser(state, action){
-      localStorage.removeItem("token")
+    logoutUser(state, action) {
+      localStorage.removeItem("token");
 
-      return{
+      return {
         ...state,
         token: "",
         name: "",
@@ -88,8 +88,8 @@ const authSlice = createSlice({
         loginStatus: "",
         loginError: "",
         userLoaded: false,
-      }
-    }
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending, (state, action) => {
@@ -148,6 +148,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {loadUser, logoutUser} = authSlice.actions
+export const { loadUser, logoutUser } = authSlice.actions;
 
 export default authSlice.reducer;
